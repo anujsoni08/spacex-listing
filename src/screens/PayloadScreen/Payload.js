@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
-import { Link } from "react-router-dom";
 
 import { ITEMS_PER_PAGE } from "../../utils/constants";
 import { handlePayloadsListing } from "../../utils/public.api.helper";
 import * as actions from "../../store/action";
+import loadingGIF from "../../assets/loadingGIF.gif";
 
 const Payload = (props) => {
   const {
@@ -21,8 +21,8 @@ const Payload = (props) => {
     resetState,
   } = props;
 
-  const [localSearchText, setLocalSearchText] = useState(searchText); // HistoryList Initial set empty
-  const [loadingState, setLoadingState] = useState(false); // HistoryList Initial set empty
+  const [localSearchText, setLocalSearchText] = useState(searchText); // LocalSearchtext Initial set empty
+  const [loadingState, setLoadingState] = useState(false); // Loadingstate Initial set empty
 
   useEffect(() => {
     async function getPayloadsListing() {
@@ -81,10 +81,6 @@ const Payload = (props) => {
 
   const isEqual = (first, second) => {
     return Number(first) === Number(second);
-  };
-
-  const getNextRoute = () => {
-    return window.location.href.indexOf("payloads") ? "history" : "payloads";
   };
 
   const renderNavigation = () => {
@@ -221,7 +217,16 @@ const Payload = (props) => {
           {renderNavigation()}
         </>
       ) : (
-        <h1>...Loading</h1>
+        <div
+          style={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%,-50%)",
+          }}
+        >
+          <img src={loadingGIF} alt={"loading"} />
+        </div>
       )}
     </div>
   );
