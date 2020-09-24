@@ -75,6 +75,15 @@ const Payload = (props) => {
     setCurrentPageData(currentPageDataFiltered);
   };
 
+  const handleClearSearch = () => {
+    const currentPageDataFiltered = dataList.slice(0, ITEMS_PER_PAGE);
+    setLocalSearchText("");
+    setSearchText("");
+    setCurrentPageNumber(1);
+    setTotalPages(Math.ceil(dataList.length / ITEMS_PER_PAGE));
+    setCurrentPageData(currentPageDataFiltered);
+  };
+
   const handleLocalSearchText = (event) => {
     setLocalSearchText(event.target.value);
   };
@@ -199,9 +208,16 @@ const Payload = (props) => {
           <button
             type="button"
             onClick={() => onSearch()}
-            className="btn btn-primary mb-2"
+            className="btn btn-primary mx-2 mb-2"
           >
             Search
+          </button>
+          <button
+            type="button"
+            onClick={handleClearSearch}
+            className="btn btn-danger mx-2 mb-2"
+          >
+            Clear Search
           </button>
         </div>
       </div>

@@ -65,6 +65,15 @@ const History = (props) => {
     setCurrentPageData(currentPageDataFiltered);
   };
 
+  const handleClearSearch = () => {
+    const currentPageDataFiltered = dataList.slice(0, ITEMS_PER_PAGE);
+    setLocalSearchText("");
+    setSearchText("");
+    setCurrentPageNumber(1);
+    setTotalPages(Math.ceil(dataList.length / ITEMS_PER_PAGE));
+    setCurrentPageData(currentPageDataFiltered);
+  };
+
   const handleLocalSearchText = (event) => {
     setLocalSearchText(event.target.value);
   };
@@ -218,9 +227,18 @@ const History = (props) => {
           <button
             type="button"
             onClick={() => onSearch()}
-            className="btn btn-primary mb-2"
+            disabled={!localSearchText.length}
+            className="btn btn-primary mx-2 mb-2"
           >
             Search
+          </button>
+          <button
+            type="button"
+            onClick={handleClearSearch}
+            disabled={!searchText.length}
+            className="btn btn-danger mx-2 mb-2"
+          >
+            Clear Search
           </button>
         </div>
       </div>
@@ -236,7 +254,14 @@ const History = (props) => {
           {renderPagination()}
         </>
       ) : (
-        <div style={{position: 'absolute',top: '50%',left:'50%',transform: 'translate(-50%,-50%)'}}>
+        <div
+          style={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%,-50%)",
+          }}
+        >
           <img src={loadingGIF} alt={"loading"} />
         </div>
       )}
