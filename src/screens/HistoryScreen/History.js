@@ -235,9 +235,6 @@ const History = (props) => {
     <div className="container-fluid">
       {!loadingState ? (
         <>
-          <div>
-            <Link to={`/${getNextRoute()}`}>Go to {getNextRoute()}</Link>
-          </div>
           {renderSearchBar()}
           {renderTable()}
           {renderPagination()}
