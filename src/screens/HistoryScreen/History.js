@@ -5,6 +5,7 @@ import { ITEMS_PER_PAGE } from "../../utils/constants";
 import { handleHistoryListing } from "../../utils/public.api.helper";
 import * as actions from "../../store/action";
 import loadingGIF from "../../assets/loadingGIF.gif";
+import { Link } from "react-router-dom";
 
 const History = (props) => {
   const {
@@ -22,7 +23,7 @@ const History = (props) => {
   } = props;
 
   const [localSearchText, setLocalSearchText] = useState(searchText); // LocalSearchtext Initial set empty
-  const [loadingState, setLoadingState] = useState(false); // Loadingstate Initial set empty
+  let [loadingState, setLoadingState] = useState(false); // Loadingstate Initial set empty
 
   useEffect(() => {
     async function getHistoryListing() {
@@ -37,7 +38,7 @@ const History = (props) => {
     return () => {
       resetState();
     };
-  }, [resetState, setCurrentPageData, setDataList, setTotalPages]);
+  }, []);
 
   const getSelectedPageData = (pageNumber = currentPageNumber) => {
     onSearch(pageNumber);
@@ -171,29 +172,33 @@ const History = (props) => {
               </tr>
             </thead>
             <tbody>
-              {currentPageData.map((data) => (
-                <tr key={data.id}>
-                  <th>{data.id}</th>
-                  <td>{data.title}</td>
-                  <td>{data.flight_number}</td>
-                  <td>{data.details}</td>
-                  <td>{data.event_date_unix}</td>
+              {currentPageData.map((data, index) => (
+                <tr key={index}>
+                  <th>{checkNullOrUndefined(data.id)}</th>
+                  <td>{checkNullOrUndefined(data.title)}</td>
+                  <td>{checkNullOrUndefined(data.flight_number)}</td>
+                  <td>{checkNullOrUndefined(data.details)}</td>
+                  <td>{checkNullOrUndefined(data.event_date_unix)}</td>
                   <td>
                     <a
-                      href={data.links.article}
+                      href={checkNullOrUndefined(data?.links?.article)}
                       rel="noopener noreferrer"
                       target="_blank"
                     >
-                      {Boolean(data.links.article) ? "Click here" : ""}
+                      {Boolean(checkNullOrUndefined(data?.links?.article))
+                        ? "Click here"
+                        : ""}
                     </a>
                   </td>
                   <td>
                     <a
-                      href={data.links.wikipedia}
+                      href={checkNullOrUndefined(data?.links?.wikipedia)}
                       rel="noopener noreferrer"
                       target="_blank"
                     >
-                      {Boolean(data.links.wikipedia) ? "Click here" : ""}
+                      {Boolean(checkNullOrUndefined(data?.links?.wikipedia))
+                        ? "Click here"
+                        : ""}
                     </a>
                   </td>
                 </tr>
@@ -245,10 +250,20 @@ const History = (props) => {
     );
   };
 
+  const checkNullOrUndefined = (value) => {
+    if (value === null || value === undefined) {
+      return "";
+    }
+    return value;
+  };
+
   return (
     <div className="container-fluid">
       {!loadingState ? (
         <>
+          <div>
+            <Link to="/payloads">Go to payloads</Link>
+          </div>
           {renderSearchBar()}
           {renderTable()}
           {renderPagination()}

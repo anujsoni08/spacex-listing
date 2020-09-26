@@ -5,6 +5,7 @@ import { ITEMS_PER_PAGE } from "../../utils/constants";
 import { handlePayloadsListing } from "../../utils/public.api.helper";
 import * as actions from "../../store/action";
 import loadingGIF from "../../assets/loadingGIF.gif";
+import { Link } from "react-router-dom";
 
 const Payload = (props) => {
   const {
@@ -22,7 +23,7 @@ const Payload = (props) => {
   } = props;
 
   const [localSearchText, setLocalSearchText] = useState(searchText); // LocalSearchtext Initial set empty
-  const [loadingState, setLoadingState] = useState(false); // Loadingstate Initial set empty
+  let [loadingState, setLoadingState] = useState(false); // Loadingstate Initial set empty
 
   useEffect(() => {
     async function getPayloadsListing() {
@@ -37,7 +38,7 @@ const Payload = (props) => {
     return () => {
       resetState();
     };
-  }, [resetState, setCurrentPageData, setDataList, setTotalPages]);
+  }, []);
 
   const getSelectedPageData = (pageNumber = currentPageNumber) => {
     onSearch(pageNumber);
@@ -90,6 +91,13 @@ const Payload = (props) => {
 
   const isEqual = (first, second) => {
     return Number(first) === Number(second);
+  };
+
+  const checkNullOrUndefined = (value) => {
+    if (value === null || value === undefined) {
+      return "";
+    }
+    return value;
   };
 
   const renderNavigation = () => {
@@ -167,16 +175,16 @@ const Payload = (props) => {
               </tr>
             </thead>
             <tbody>
-              {currentPageData.map((data) => (
-                <tr key={data.payload_id}>
-                  <th>{data.payload_id}</th>
-                  <td>{data.payload_type}</td>
-                  <td>{data.orbit}</td>
-                  <td>{data.payload_mass_kg}</td>
-                  <td>{data.manufacturer}</td>
-                  <td>{data.nationality}</td>
-                  <td>{data.customers.join(", ")}</td>
-                  <td>{data.reused}</td>
+              {currentPageData.map((data, index) => (
+                <tr key={index}>
+                  <th>{checkNullOrUndefined(data.payload_id)}</th>
+                  <td>{checkNullOrUndefined(data.payload_type)}</td>
+                  <td>{checkNullOrUndefined(data.orbit)}</td>
+                  <td>{checkNullOrUndefined(data.payload_mass_kg)}</td>
+                  <td>{checkNullOrUndefined(data.manufacturer)}</td>
+                  <td>{checkNullOrUndefined(data.nationality)}</td>
+                  <td>{checkNullOrUndefined(data?.customers?.join(", "))}</td>
+                  <td>{checkNullOrUndefined(data.reused) ? 'Yes' : 'No'}</td>
                 </tr>
               ))}
             </tbody>
@@ -228,6 +236,9 @@ const Payload = (props) => {
     <div className="container-fluid">
       {!loadingState ? (
         <>
+          <div>
+            <Link to="/history">Go to History</Link>
+          </div>
           {renderSearchBar()}
           {renderTable()}
           {renderNavigation()}
